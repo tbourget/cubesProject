@@ -45,19 +45,19 @@ def get_entries_as_json():
     return response.json()
 
 
-def write_json_to_file(json: str, file_name: str):
+def write_json_to_file(json_obj: str, file_name: str):
     """
-    Writes a JSON object 'json' to a file named 'file_name'
+    Writes a JSON object 'json_obj' to a file named 'file_name'
 
     Parameters
     ----------
-    json : str
+    json_obj : str
         JSON object to write to a file
     file_name
         Desired name for JSON file
     """
     with open(file_name + '.json', 'w') as f:
-        json.dump(json, f)
+        json.dump(json_obj, f, indent=2)
 
 
 if __name__ == '__main__':
