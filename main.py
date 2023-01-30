@@ -8,7 +8,7 @@ def main():
     print(json.dumps(entries.json(), indent=2))
 
 
-def retrieve_api_key(api_name: str):
+def retrieve_api_key_from_secrets(api_name: str):
     """
     Retrieves an API key from a .secrets JSON dict using an API name
 
@@ -38,7 +38,7 @@ def get_entries_as_JSON():
     """
     # Use a breakpoint in the code line below to debug your script.
     form_url = 'https://tbourget.wufoo.com/api/v3/forms/z1x6vy9k0dlvbjl/entries.json?sort=EntryId&sortDirection=DESC'
-    username = retrieve_api_key('tbourget_CUBES')
+    username = retrieve_api_key_from_secrets('tbourget_CUBES')
     password = 'tbourget_CUBES'
 
     response = requests.get(form_url, auth=HTTPBasicAuth(username, password))
