@@ -9,9 +9,9 @@ def main():
     write_json_to_file(entries, 'entries')
 
 
-def retrieve_api_key_from_secrets(api_name: str):
+def retrieve_api_key_from_secrets(api_name: str) -> str:
     """
-    Retrieves an API key from a .secrets JSON dict using an API name
+    Retrieves an API key from a .secrets JSON dictionary using an API name as the dictionary key.
 
     Parameters
     ----------
@@ -28,9 +28,10 @@ def retrieve_api_key_from_secrets(api_name: str):
         return data[api_name]
 
 
-def get_entries_as_json():
+def get_entries_as_json() -> str:
     """
-    Retrieves entries from the CUBES project proposal form as a JSON file
+    Retrieves entries from the CUBES project proposal form on Wufoo.com using Wufoo's API.
+    The data is returned as a JSON object.
 
     Returns
     -------
@@ -47,7 +48,7 @@ def get_entries_as_json():
 
 def write_json_to_file(json_obj: str, file_name: str):
     """
-    Writes a JSON object 'json_obj' to a file named 'file_name'
+    Writes a JSON object 'json_obj' to a file named 'file_name'.
 
     Parameters
     ----------
