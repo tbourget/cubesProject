@@ -21,7 +21,7 @@ def main():
         parse_json_into_entries_table(entries_json, db_cursor)
 
         # Write the entries JSON to a file
-        write_json_to_file(entries_json, 'entries')
+        write_json_to_file(entries_json, 'cubes_entries')
 
         # Commit changes to the SQlite connection and close the cursor
         commit_connection_close_cursor(db_connection, db_cursor)
