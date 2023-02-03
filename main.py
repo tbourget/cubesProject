@@ -1,11 +1,12 @@
 import json
 import sqlite3
 import requests
+import secrets
 from requests.auth import HTTPBasicAuth
 
 
 def main():
-    # Initialize the connection to the 'cubes_project' SQLite database
+    # Initialize the connection to the 'cubes_project' SQLite database, create it if it doesn't exist
     with initialize_connection() as db_connection:
 
         # Create cursor for the database
@@ -29,27 +30,6 @@ def main():
 
 # DATA RETRIEVAL / API FUNCTIONS
 
-
-def retrieve_api_key_from_secrets(api_name: str) -> str:
-    """
-    Retrieves an API key from a .secrets JSON dictionary using an API name as the dictionary key.
-
-    Parameters
-    ----------
-    api_name: str
-        Name of the API to retrieve the key for
-
-    Returns
-    -------
-    str
-        The API key of the corresponding api_name
-    """
-
-    with open(".secrets.json") as f:
-        data = json.load(f)
-        return data[api_name]
-
-
 def get_entries_as_json() -> str:
     """
     Retrieves entries from the CUBES project proposal form on Wufoo.com using Wufoo's API. The data is returned as a
@@ -62,7 +42,7 @@ def get_entries_as_json() -> str:
     """
 
     form_url = 'https://tbourget.wufoo.com/api/v3/forms/z1x6vy9k0dlvbjl/entries.json?sort=EntryId&sortDirection=DESC'
-    username = retrieve_api_key_from_secrets('tbourget_CUBES')
+    username = secrets.wufoo_key
     password = 'tbourget_CUBES'
 
     response = requests.get(form_url, auth=HTTPBasicAuth(username, password))
@@ -91,7 +71,6 @@ def write_json_to_file(json_obj, file_name: str):
 
 
 # DATABASE FUNCTIONS
-
 
 def initialize_connection() -> sqlite3.Connection:
     """
