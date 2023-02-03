@@ -30,6 +30,7 @@ def main():
 
 # DATA RETRIEVAL / API FUNCTIONS
 
+
 def get_entries_as_json() -> str:
     """
     Retrieves entries from the CUBES project proposal form on Wufoo.com using Wufoo's API. The data is returned as a
@@ -71,6 +72,7 @@ def write_json_to_file(json_obj, file_name: str):
 
 
 # DATABASE FUNCTIONS
+
 
 def initialize_connection() -> sqlite3.Connection:
     """
@@ -200,9 +202,6 @@ def parse_json_into_entries_table(entries_json, db_cursor: sqlite3.Connection):
 
         db_cursor.execute('''INSERT INTO entries VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
                           ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', entry_tuple)
-
-        print(json.dumps(entry, indent=2))
-        print('\n\n\n')
 
 
 if __name__ == '__main__':
