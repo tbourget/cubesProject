@@ -106,7 +106,7 @@ def initialize_entries_table(db_cursor: sqlite3.Cursor):
     """
     try:
         db_cursor.execute('''CREATE TABLE IF NOT EXISTS entries(
-                                        entry_id INT,
+                                        entry_id INT PRIMARY KEY,
                                         prefix TEXT,
                                         first_name TEXT,
                                         last_name TEXT,
@@ -199,9 +199,11 @@ def parse_json_into_entries_table(entries_json, db_cursor: sqlite3.Connection):
                        opportunity_networking_event, proposed_time_summer22, proposed_time_fall22,
                        proposed_time_spring23, proposed_time_summer23, proposed_time_other, permission_to_use_org_name,
                        date_created, created_by, date_updated, updated_by)
-
-        db_cursor.execute('''INSERT INTO entries VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-                          ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', entry_tuple)
+        try:
+            db_cursor.execute('''INSERT OR IGNORE INTO entries VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
+                            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', entry_tuple)
+        except sqlite3.Error as db_error:
+            print(f'A Database Error has occurred: {db_error}')
 
 
 if __name__ == '__main__':
