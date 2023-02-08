@@ -166,39 +166,9 @@ def parse_json_into_entries_table(entries_json, db_cursor: sqlite3.Connection):
     """
 
     for entry in entries_json['Entries']:
-        entry_id = entry['EntryId']
-        prefix = entry['Field2']
-        first_name = entry['Field4']
-        last_name = entry['Field5']
-        title = entry['Field6']
-        organization_name = entry['Field7']
-        email = entry['Field8']
-        organization_website = entry['Field9']
-        phone_number = entry['Field10']
-        opportunity_course_project = entry['Field11']
-        opportunity_guest_speaker = entry['Field12']
-        opportunity_site_visit = entry['Field13']
-        opportunity_job_shadow = entry['Field14']
-        opportunity_internships = entry['Field15']
-        opportunity_career_panel = entry['Field16']
-        opportunity_networking_event = entry['Field17']
-        proposed_time_summer22 = entry['Field111']
-        proposed_time_fall22 = entry['Field112']
-        proposed_time_spring23 = entry['Field113']
-        proposed_time_summer23 = entry['Field114']
-        proposed_time_other = entry['Field115']
-        permission_to_use_org_name = entry['Field211']
-        date_created = entry['DateCreated']
-        created_by = entry['CreatedBy']
-        date_updated = entry['DateUpdated']
-        updated_by = entry['UpdatedBy']
 
-        entry_tuple = (entry_id, prefix, first_name, last_name, title, organization_name, email, organization_website,
-                       phone_number, opportunity_course_project, opportunity_guest_speaker, opportunity_site_visit,
-                       opportunity_job_shadow, opportunity_internships, opportunity_career_panel,
-                       opportunity_networking_event, proposed_time_summer22, proposed_time_fall22,
-                       proposed_time_spring23, proposed_time_summer23, proposed_time_other, permission_to_use_org_name,
-                       date_created, created_by, date_updated, updated_by)
+        entry_tuple = list(entry.values())
+
         try:
             db_cursor.execute('''INSERT OR IGNORE INTO entries VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
                             ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', entry_tuple)
