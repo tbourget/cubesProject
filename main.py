@@ -31,7 +31,7 @@ def main():
 # DATA RETRIEVAL / API FUNCTIONS
 
 
-def get_entries_as_json() -> str:
+def get_entries_as_json() -> str:  # comment to test workflow
     """
     Retrieves entries from the CUBES project proposal form on Wufoo.com using Wufoo's API. The data is returned as a
     JSON object.
