@@ -18,18 +18,18 @@ class EntriesWindow(QWidget):
         display_list = QListWidget(self)
         self.list_control = display_list
         self.populate_display_list(self.data)
-        display_list.resize(400, 350)
+        display_list.resize(400, 700)
         display_list.currentItemChanged.connect(self.list_item_selected)
-        self.setGeometry(300, 50, 400, 500)
+        self.setGeometry(50, 50, 400, 800)
         quit_button = QPushButton("Quit Now", self)
         quit_button.clicked.connect(QApplication.instance().quit)
         quit_button.resize(quit_button.sizeHint())
-        quit_button.move(300, 400)
+        quit_button.move(50, 725)
         self.show()
 
     def populate_display_list(self, data: list[dict]):
         for entries in data:
-            display_text = f"{entries['entry_id']}\t\t{entries['organization_name']}"
+            display_text = f"{entries['entry_id']}\t{entries['organization_name']}"
             list_item = QListWidgetItem(display_text, listview=self.list_control)
 
     def do_something_to_demo(self):
@@ -73,7 +73,7 @@ class EntryDataWindow(QWidget):
 
     def setup_window(self):
         self.setWindowTitle(f"{self.data['organization_name']}")
-        self.setGeometry(750, 50, 500, 1000)  # put the new window next to the original one wider than it is tall
+        self.setGeometry(450, 50, 500, 800)  # put the new window next to the original one wider than it is tall
 
         label = QLabel(self)
         label.setText("Prefix: ")
