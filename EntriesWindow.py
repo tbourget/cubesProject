@@ -94,41 +94,65 @@ class EntryDataWindow(QWidget):
         else:
             prefix_display.setCurrentIndex(0)
 
-
+        # First name
         label = QLabel("First Name: ", self)
         label.move(50, 80)
+
         first_name_display = QLineEdit(self.data['first_name'], self)
         first_name_display.move(200, 80)
+
+        # Last name
         label = QLabel("Last Name: ", self)
         label.move(50, 110)
+
         last_name_display = QLineEdit(self.data['last_name'], self)
         last_name_display.move(200, 110)
+
+        # Title
         label = QLabel("Title: ", self)
         label.move(50, 140)
+
         title_display = QLineEdit(self.data['title'], self)
         title_display.move(200, 140)
+
+        # Organization Name
         label = QLabel("Organization: ", self)
         label.move(50, 170)
+
         organization_name_display = QLineEdit(self.data['organization_name'], self)
         organization_name_display.move(200, 170)
+
+        # Organization Email
         label = QLabel("Email: ", self)
         label.move(50, 200)
+
         email_display = QLineEdit(self.data['email'], self)
         email_display.move(200, 200)
+
+        # Organization Website
         label = QLabel("Website: ", self)
         label.move(50, 230)
+
         organization_website_display = QLineEdit(self.data['organization_website'], self)
         organization_website_display.move(200, 230)
+
+        #Organization Phone Number
         label = QLabel("Phone Number: ", self)
         label.move(50, 260)
+
         phone_number_display = QLineEdit(self.data['phone_number'], self)
         phone_number_display.move(200, 260)
+
+        # Opportunities interested in
         label = QLabel("Opportunities interested in: ", self)
         label.move(50, 300)
+
         label = QLabel("Course Project", self)
         label.move(70, 340)
+
         opp_course_proj_display = QCheckBox(self)
         opp_course_proj_display.move(180, 342)
+
         if self.data['opportunity_course_project'] != "":
             opp_course_proj_display.setChecked(1)
         label = QLabel("Guest Speaker", self)
@@ -167,6 +191,8 @@ class EntryDataWindow(QWidget):
         opp_network_event_display.move(180, 432)
         if self.data['opportunity_networking_event'] != "":
             opp_network_event_display.setChecked(1)
+
+        # Proposed collaboration time
         label = QLabel("Proposed collaboration time:", self)
         label.move(50, 470)
         label = QLabel("Summer 2022 (June 2022 - August 2022)", self)
@@ -199,6 +225,8 @@ class EntryDataWindow(QWidget):
         collab_time_other_display.move(330, 632)
         if self.data['proposed_time_other'] != "":
             collab_time_other_display.setChecked(1)
+
+        # Permission to use organization name
         label = QLabel("Permission to use organization name?", self)
         label.move(50, 670)
         permission_to_use_name_display = QComboBox(self)

@@ -36,9 +36,7 @@
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="7abfbd04-5cb2-41a2-bea2-d48cc33174d5" object-ref="schemas/main/tables/entries" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="7abfbd04-5cb2-41a2-bea2-d48cc33174d5" dataset="main.entries" active-filter-id="EMPTY_FILTER" />
