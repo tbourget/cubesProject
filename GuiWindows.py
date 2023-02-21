@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox, Q
     QLineEdit, QCheckBox, QComboBox
 from PySide6.QtGui import QCloseEvent
 
-class EntriesWindow(QWidget):
+class EntryListWindow(QWidget):
 
     def __init__(self, entries_data):
         super().__init__()
@@ -20,23 +20,17 @@ class EntriesWindow(QWidget):
         self.populate_display_list(self.data)
         display_list.resize(400, 700)
         display_list.currentItemChanged.connect(self.list_item_selected)
-        self.setGeometry(50, 50, 400, 800)
+        self.setGeometry(50, 50, 400, 750)
         quit_button = QPushButton("Quit Now", self)
         quit_button.clicked.connect(QApplication.instance().quit)
         quit_button.resize(quit_button.sizeHint())
-        quit_button.move(50, 725)
+        quit_button.move(50, 713)
         self.show()
 
     def populate_display_list(self, data: list[dict]):
         for entries in data:
             display_text = f"{entries['entry_id']}\t{entries['organization_name']}"
             list_item = QListWidgetItem(display_text, listview=self.list_control)
-
-    def do_something_to_demo(self):
-        message_box = QMessageBox(self)
-        message_box.setText("You just pushed the button - imagine database work here")
-        message_box.setWindowTitle("Comp490 Demo")
-        message_box.show()
 
     def find_full_data_record(self, entry_id):
         for entry_record in self.data:
@@ -47,7 +41,6 @@ class EntriesWindow(QWidget):
         selected_data = current.data(0)  # the data function has a 'role' choose 0 unless you extended QListWidgetItem
         entry_id = selected_data.split("\t")[0]  # split on tab and take the first resulting entry
         full_record = self.find_full_data_record(entry_id)
-        print(full_record)
         self.data_window = EntryDataWindow(full_record)
         self.data_window.show()
 
@@ -73,7 +66,7 @@ class EntryDataWindow(QWidget):
 
     def setup_window(self):
         self.setWindowTitle(f"{self.data['organization_name']}")
-        self.setGeometry(450, 50, 500, 800)  # put the new window next to the original one wider than it is tall
+        self.setGeometry(450, 50, 500, 750)  # put the new window next to the original one wider than it is tall
 
         label = QLabel(self)
         label.setText("Prefix: ")

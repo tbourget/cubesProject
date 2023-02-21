@@ -1,16 +1,12 @@
 import sqlite3
-
 import DatabaseFunctions
 import PySide6.QtWidgets
 import sys
-from EntriesWindow import EntriesWindow
-import numbers
-
-
+from GuiWindows import EntryListWindow
 
 def display_data(data: list):
     qt_app = PySide6.QtWidgets.QApplication(sys.argv)  # sys.argv is the list of command line arguments
-    my_window = EntriesWindow(data)
+    my_window = EntryListWindow(data)
     sys.exit(qt_app.exec())
 
 
@@ -42,11 +38,7 @@ def dict_from_row(row):
 def get_key(value:dict):
     return value['entry_id']
 
-def main():
+def launch_gui():
     data = retrieve_entry_data_from_database()
     data.sort(key=get_key)
     display_data(data)
-
-
-if __name__ == '__main__':
-    main()
