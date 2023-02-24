@@ -3,6 +3,7 @@ from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox, Q
     QLineEdit, QCheckBox, QComboBox
 from PySide6.QtGui import QCloseEvent
 
+
 class EntryListWindow(QWidget):
 
     def __init__(self, entries_data):
@@ -11,7 +12,6 @@ class EntryListWindow(QWidget):
         self.list_control = None
         self.data_window = None
         self.setup_window()
-
 
     def setup_window(self):
         self.setWindowTitle("CUBES Project Entries")
@@ -56,6 +56,7 @@ class EntryListWindow(QWidget):
             event.accept()
         else:
             event.ignore()
+
 
 class EntryDataWindow(QWidget):
 
@@ -120,6 +121,7 @@ class EntryDataWindow(QWidget):
         label.move(50, 200)
 
         email_display = QLineEdit(self.data['email'], self)
+        email_display.setObjectName("email_display")
         email_display.move(200, 200)
 
         # Organization Website

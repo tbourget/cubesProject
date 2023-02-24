@@ -3,6 +3,7 @@ import DatabaseFunctions
 import ApiFunctions
 import GuiManager
 
+
 def main():
     # Initialize the connection to the 'cubes_project' SQLite database, create it if it doesn't exist
     with DatabaseFunctions.initialize_connection() as db_connection:

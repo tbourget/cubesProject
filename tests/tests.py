@@ -1,11 +1,14 @@
 import json
+import pytestqt
+import PySide6.QtTest
+import PySide6.QtCore
+import PySide6.QtWidgets
 
-import pytest
 import DatabaseFunctions
 import ApiFunctions
 import GuiManager
 import GuiWindows
-
+import mock
 
 
 def test_get_entries_as_json():
@@ -76,8 +79,8 @@ def test_parse_json_into_entries_table():
 
         assert data != []
 
-def test_other():
-    print("ok")
+
+def test_entry_data_window_data_population(qtbot):
     # Create a temporary database with a test entry
     with DatabaseFunctions.initialize_connection() as db_connection:
         db_cursor = db_connection.cursor()
@@ -119,11 +122,19 @@ def test_other():
         test_entry_json = json.loads(test_entry)
         DatabaseFunctions.parse_json_into_entries_table(test_entry_json, db_cursor)
 
-    data = GuiManager.retrieve_entry_data_from_database()
-    data.sort(key=GuiManager.get_key)
-    test_window = GuiWindows.EntryDataWindow(data)
-    widget = test_window.findChildren("email_display")
-    print("ok")
-    assert widget.text() == "testcase@gmail.com"
-    # widget = test_window.findChildren("opp_course_proj_display")
-    # assert widget.isChecked()
+        db_cursor.execute('''SELECT * FROM entries''')
+
+        raw_data = db_cursor.fetchall()
+
+        DatabaseFunctions.commit_connection_close_cursor(db_connection, db_cursor)
+
+    with mock.patch.object(PySide6.QtWidgets.QApplication, "exit"):
+        data = GuiManager.retrieve_entry_data_from_database()
+        for entry_record in data:
+            data = entry_record
+
+        test_window = GuiWindows.EntryDataWindow(data)
+
+        widget = test_window.findChildren(PySide6.QtWidgets.QLineEdit, "email_display")
+        print(widget)
+        assert widget[0].text() == "testcase@gmail.com"
