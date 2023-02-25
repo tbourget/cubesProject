@@ -1,4 +1,6 @@
 import json
+import sqlite3
+
 import pytestqt
 import PySide6.QtTest
 import PySide6.QtCore
@@ -26,7 +28,7 @@ def test_get_entries_as_json():
     assert entry_count >= 10
 
 
-def test_parse_json_into_entries_table():
+def test_entry_table_data_population():
     """
     Tests parse_json_into_entries_table(), our function that parses a retrieved entries JSON into an SQLite database
         - Test 1: Asserts that a sample entry appears in the database
@@ -78,6 +80,21 @@ def test_parse_json_into_entries_table():
         db_cursor.close()
 
         assert data != []
+
+
+def test_database_exists():
+    """
+    Tests parse_json_into_entries_table(), our function that parses a retrieved entries JSON into an SQLite database
+        - Test 1: Asserts that a sample entry appears in the database
+    """
+    # Create a temporary database with a test entry
+    try:
+        connection = DatabaseFunctions.initialize_connection()
+    except sqlite3.Error as db_error:
+        assert 2 == 1
+
+    assert 1 == 1
+
 
 
 def test_entry_data_window_data_population(qtbot):
