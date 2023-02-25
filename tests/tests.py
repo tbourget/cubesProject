@@ -18,7 +18,7 @@ def test_get_entries_as_json():
     Tests get_entries_as_json(), our API json retrieval function
         - Test 1: Asserts we retrieve 10 or more entries
     """
-    entries_json = ApiFunctions.get_entries_as_json()
+    entries_json = ApiFunctions.get_entries_as_dict()
 
     # Test 1
     entry_count = 0
