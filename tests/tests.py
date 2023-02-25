@@ -96,7 +96,6 @@ def test_database_exists():
     assert 1 == 1
 
 
-
 def test_entry_data_window_data_population(qtbot):
     # Create a temporary database with a test entry
     with DatabaseFunctions.initialize_connection() as db_connection:

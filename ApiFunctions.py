@@ -4,10 +4,10 @@ from requests.auth import HTTPBasicAuth
 import secrets
 
 
-def get_entries_as_json() -> str:  # comment to test workflow
+def get_entries_as_dict() -> str:  # comment to test workflow
     """
     Retrieves entries from the CUBES project proposal form on Wufoo.com using Wufoo's API. The data is returned as a
-    JSON object.
+    dictionary.
 
     Returns
     -------
