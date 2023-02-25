@@ -75,6 +75,7 @@ class EntryDataWindow(QWidget):
         prefix_display = QComboBox(self)
         prefix_display.addItems([" ", "Dr.", "Mrs.","Ms.","Mr."])
         prefix_display.move(200, 50)
+        prefix_display.setEnabled(False)
 
         prefix = self.data['prefix']
         if prefix == "Dr.":
@@ -94,6 +95,7 @@ class EntryDataWindow(QWidget):
 
         first_name_display = QLineEdit(self.data['first_name'], self)
         first_name_display.move(200, 80)
+        first_name_display.setReadOnly(True)
 
         # Last name
         label = QLabel("Last Name: ", self)
@@ -101,6 +103,7 @@ class EntryDataWindow(QWidget):
 
         last_name_display = QLineEdit(self.data['last_name'], self)
         last_name_display.move(200, 110)
+        last_name_display.setReadOnly(True)
 
         # Title
         label = QLabel("Title: ", self)
@@ -108,6 +111,7 @@ class EntryDataWindow(QWidget):
 
         title_display = QLineEdit(self.data['title'], self)
         title_display.move(200, 140)
+        title_display.setReadOnly(True)
 
         # Organization Name
         label = QLabel("Organization: ", self)
@@ -115,6 +119,7 @@ class EntryDataWindow(QWidget):
 
         organization_name_display = QLineEdit(self.data['organization_name'], self)
         organization_name_display.move(200, 170)
+        organization_name_display.setReadOnly(True)
 
         # Organization Email
         label = QLabel("Email: ", self)
@@ -123,6 +128,7 @@ class EntryDataWindow(QWidget):
         email_display = QLineEdit(self.data['email'], self)
         email_display.setObjectName("email_display")
         email_display.move(200, 200)
+        email_display.setReadOnly(True)
 
         # Organization Website
         label = QLabel("Website: ", self)
@@ -130,6 +136,7 @@ class EntryDataWindow(QWidget):
 
         organization_website_display = QLineEdit(self.data['organization_website'], self)
         organization_website_display.move(200, 230)
+        organization_website_display.setReadOnly(True)
 
         #Organization Phone Number
         label = QLabel("Phone Number: ", self)
@@ -137,6 +144,7 @@ class EntryDataWindow(QWidget):
 
         phone_number_display = QLineEdit(self.data['phone_number'], self)
         phone_number_display.move(200, 260)
+        phone_number_display.setReadOnly(True)
 
         # Opportunities interested in
         label = QLabel("Opportunities interested in: ", self)
@@ -144,82 +152,103 @@ class EntryDataWindow(QWidget):
 
         label = QLabel("Course Project", self)
         label.move(70, 340)
-
         opp_course_proj_display = QCheckBox(self)
         opp_course_proj_display.move(180, 342)
-
         if self.data['opportunity_course_project'] != "":
             opp_course_proj_display.setChecked(1)
+        opp_course_proj_display.setEnabled(False)
+
         label = QLabel("Guest Speaker", self)
         label.move(240, 340)
         opp_guest_speak_display = QCheckBox(self)
         opp_guest_speak_display.move(340, 342)
         if self.data['opportunity_guest_speaker'] != "":
             opp_guest_speak_display.setChecked(1)
+        opp_guest_speak_display.setEnabled(False)
+
         label = QLabel("Site Visit", self)
         label.move(70, 370)
         opp_site_visit_display = QCheckBox(self)
         opp_site_visit_display.move(180, 372)
         if self.data['opportunity_site_visit'] != "":
             opp_site_visit_display.setChecked(1)
+        opp_site_visit_display.setEnabled(False)
+
         label = QLabel("Job Shadow", self)
         label.move(240, 370)
         opp_job_shadow_display = QCheckBox(self)
         opp_job_shadow_display.move(340, 372)
         if self.data['opportunity_job_shadow'] != "":
             opp_job_shadow_display.setChecked(1)
+        opp_job_shadow_display.setEnabled(False)
+
         label = QLabel("Internships", self)
         label.move(70, 400)
         opp_internships_display = QCheckBox(self)
         opp_internships_display.move(180, 402)
         if self.data['opportunity_internships'] != "":
             opp_internships_display.setChecked(1)
+        opp_internships_display.setEnabled(False)
+
         label = QLabel("Career Panel", self)
         label.move(240, 400)
         opp_career_panel_display = QCheckBox(self)
         opp_career_panel_display.move(340, 402)
         if self.data['opportunity_career_panel'] != "":
             opp_career_panel_display.setChecked(1)
+        opp_career_panel_display.setEnabled(False)
+
         label = QLabel("Networking Event", self)
         label.move(70, 430)
         opp_network_event_display = QCheckBox(self)
         opp_network_event_display.move(180, 432)
         if self.data['opportunity_networking_event'] != "":
             opp_network_event_display.setChecked(1)
+        opp_network_event_display.setEnabled(False)
 
         # Proposed collaboration time
         label = QLabel("Proposed collaboration time:", self)
         label.move(50, 470)
+
         label = QLabel("Summer 2022 (June 2022 - August 2022)", self)
         label.move(70, 510)
         collab_time_sum22_display = QCheckBox(self)
         collab_time_sum22_display.move(330, 512)
         if self.data['proposed_time_summer22'] != "":
             collab_time_sum22_display.setChecked(1)
+        collab_time_sum22_display.setEnabled(False)
+
         label = QLabel("Fall 2022 (September 2022 - December 2022)", self)
         label.move(70, 540)
         collab_time_fall22_display = QCheckBox(self)
         collab_time_fall22_display.move(330, 542)
         if self.data['proposed_time_fall22'] != "":
             collab_time_fall22_display.setChecked(1)
+        collab_time_fall22_display.setEnabled(False)
+
         label = QLabel("Spring 2023 (January 2023 - April 2023)", self)
         label.move(70, 570)
         collab_time_spring23_display = QCheckBox(self)
         collab_time_spring23_display.move(330, 572)
         if self.data['proposed_time_spring23'] != "":
             collab_time_spring23_display.setChecked(1)
+        collab_time_spring23_display.setEnabled(False)
+
         label = QLabel("Summer 2023 (June 2023 - August 2023)", self)
         label.move(70, 600)
         collab_time_sum23_display = QCheckBox(self)
         collab_time_sum23_display.move(330, 602)
         if self.data['proposed_time_summer23'] != "":
             collab_time_sum23_display.setChecked(1)
+        collab_time_sum23_display.setEnabled(False)
+
         label = QLabel("Other", self)
         label.move(70, 630)
         collab_time_other_display = QCheckBox(self)
         collab_time_other_display.move(330, 632)
         if self.data['proposed_time_other'] != "":
             collab_time_other_display.setChecked(1)
+        collab_time_other_display.setEnabled(False)
 
         # Permission to use organization name
         label = QLabel("Permission to use organization name?", self)
@@ -228,6 +257,7 @@ class EntryDataWindow(QWidget):
         permission_to_use_name_display.addItem("Yes")
         permission_to_use_name_display.addItem("No")
         permission_to_use_name_display.addItem("Further discussion is needed")
+        permission_to_use_name_display.setEnabled(False)
 
         permission = self.data['permission_to_use_org_name']
         if permission == "Yes":

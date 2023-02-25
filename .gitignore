@@ -3,3 +3,5 @@
 /cubes_entries.json
 /cubes_project.db
 /secrets.py
+/tests/cubes_project.db
+/.idea/.name
