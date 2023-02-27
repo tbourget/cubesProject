@@ -1,20 +1,53 @@
 import sys
+import DatabaseFunctions
 from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox, QListWidget, QListWidgetItem, QLabel, \
     QLineEdit, QCheckBox, QComboBox
 from PySide6.QtGui import QCloseEvent
 
+import GuiManager
+
+
+class StartupWindow(QWidget):
+    def __init__(self, GuiManager):
+        super().__init__()
+        self.gm = GuiManager
+        self.setup_window()
+        self.show()
+
+    def setup_window(self):
+        self.setWindowTitle("CUBES Project Database Viewer")
+        self.setGeometry(200, 100, 345, 75)
+        view_data_button = QPushButton("View Data", self)
+        view_data_button.resize(view_data_button.sizeHint())
+        view_data_button.move(60, 25)
+        view_data_button.clicked.connect(self.view_button)
+        update_data_button = QPushButton("Update Data", self)
+        update_data_button.resize(update_data_button.sizeHint())
+        update_data_button.move(200, 25)
+        update_data_button.clicked.connect(self.update_button)
+
+    def update_button(self):
+        DatabaseFunctions.update_database()
+        reply = QMessageBox.information(
+            self,
+            'INFO',
+            'Database updated',
+            QMessageBox.Ok)
+
+    def view_button(self):
+        self.gm.launch_database_view()
 
 class EntryListWindow(QWidget):
 
-    def __init__(self, entries_data):
+    def __init__(self, GuiManager):
         super().__init__()
-        self.data = entries_data
+        self.data = DatabaseFunctions.retrieve_entry_data_from_database()
         self.list_control = None
         self.data_window = None
         self.setup_window()
 
     def setup_window(self):
-        self.setWindowTitle("CUBES Project Entries")
+        self.setWindowTitle("CUBES Project Database Viewer")
         display_list = QListWidget(self)
         self.list_control = display_list
         self.populate_display_list(self.data)
@@ -56,7 +89,6 @@ class EntryListWindow(QWidget):
             event.accept()
         else:
             event.ignore()
-
 
 class EntryDataWindow(QWidget):
 
