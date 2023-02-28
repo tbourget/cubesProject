@@ -72,7 +72,7 @@ def test_entry_table_data_population():
             }"""
 
         test_entry_json = json.loads(test_entry)
-        DatabaseFunctions.parse_json_into_entries_table(test_entry_json, db_cursor)
+        DatabaseFunctions.parse_dict_into_entries_table(test_entry_json, db_cursor)
 
         db_cursor.execute("SELECT first_name FROM entries WHERE first_name=?", ('Test',))
         data = db_cursor.fetchall()
@@ -135,7 +135,7 @@ def test_entry_data_window_data_population(qtbot):
             }"""
 
         test_entry_json = json.loads(test_entry)
-        DatabaseFunctions.parse_json_into_entries_table(test_entry_json, db_cursor)
+        DatabaseFunctions.parse_dict_into_entries_table(test_entry_json, db_cursor)
 
         db_cursor.execute('''SELECT * FROM entries''')
 

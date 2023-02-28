@@ -94,19 +94,19 @@ def commit_connection_close_cursor(db_connection: sqlite3.Connection, db_cursor:
     db_cursor.close()
 
 
-def parse_json_into_entries_table(entries_json, db_cursor: sqlite3.Connection):
+def parse_dict_into_entries_table(entries_dict, db_cursor: sqlite3.Connection):
     """
-    Parses the entries JSON dictionary into a SQLite database.
+    Parses the entries dictionary into a SQLite database.
 
     Parameters
     ----------
-    entries_json
-        JSON object to parse entries from
+    entries_dict
+        Dict to parse entries from
     db_cursor: sqlite3.Connection
         The cursor for the active connection to the 'cubes_project' database
     """
 
-    for entry in entries_json['Entries']:
+    for entry in entries_dict['Entries']:
 
         entry_tuple = list(entry.values())
         entry_tuple.append(None)
@@ -141,7 +141,7 @@ def retrieve_entry_data_from_database() -> list[dict]:
     return final_data
 
 
-def is_entry_claimed(user:str):
+def lookup_teacher(bsu_email:str):
     with initialize_connection() as db_connection:
 
         db_connection.row_factory = sqlite3.Row
@@ -149,7 +149,26 @@ def is_entry_claimed(user:str):
         # Create cursor for the database
         db_cursor = db_connection.cursor()
         try:
-            db_cursor.execute("SELECT * FROM entries WHERE claimed_by='{user}'")
+            db_cursor.execute("SELECT * FROM teachers WHERE bsu_email=?", (bsu_email,))
+            raw_data = db_cursor.fetchall()
+            if raw_data == []:
+                return False
+            else:
+                return dict_from_row(raw_data)
+
+        except sqlite3.Error as db_error:
+            print(f'A Database Error has occurred: {db_error}')
+
+        commit_connection_close_cursor(db_connection, db_cursor)
+
+
+def is_entry_claimed(bsu_email:str):
+    with initialize_connection() as db_connection:
+
+        # Create cursor for the database
+        db_cursor = db_connection.cursor()
+        try:
+            db_cursor.execute("SELECT * FROM entries WHERE claimed_by=?", (bsu_email,))
             raw_data = db_cursor.fetchall()
             if raw_data == []:
                 return False
@@ -159,12 +178,48 @@ def is_entry_claimed(user:str):
         except sqlite3.Error as db_error:
             print(f'A Database Error has occurred: {db_error}')
 
+        commit_connection_close_cursor(db_connection, db_cursor)
+
+
+def accept_claim(teacher_data:dict, selected_data:dict):
+    with initialize_connection() as db_connection:
+        print(teacher_data.keys())
+        # Create cursor for the database
+        db_cursor = db_connection.cursor()
+        try:
+            db_cursor.execute('''UPDATE entries SET claimed_by = ? WHERE entry_id = ?;''',
+                              (teacher_data['bsu_email'], selected_data['entry_id'],))
+            raw_data = db_cursor.fetchall()
+            if raw_data == []:
+                return False
+            else:
+                return True
+
+        except sqlite3.Error as db_error:
+            print(f'A Database Error has occurred: {db_error}')
+
+        commit_connection_close_cursor(db_connection, db_cursor)
+
+def add_teacher_row(teacher_data):
+    with initialize_connection() as db_connection:
+
+        # Create cursor for the database
+        db_cursor = db_connection.cursor()
+
+        try:
+            db_cursor.execute('''INSERT OR IGNORE INTO teachers VALUES(?, ?, ?, ?, ?)''', teacher_data)
+
+        except sqlite3.Error as db_error:
+            print(f'A Database Error has occurred: {db_error}')
+
+        commit_connection_close_cursor(db_connection, db_cursor)
+
 
 def dict_from_row(row):
     return dict(zip(row.keys(), row))
 
 
-def update_database():
+def update_entries_database():
     # Initialize the connection to the 'cubes_project' SQLite database, create it if it doesn't exist
     with initialize_connection() as db_connection:
 
@@ -178,7 +233,7 @@ def update_database():
         entries_dict = ApiFunctions.get_entries_as_dict()
 
         # Parse the data from the entries dict into our entries table
-        parse_json_into_entries_table(entries_dict, db_cursor)
+        parse_dict_into_entries_table(entries_dict, db_cursor)
 
         # Commit changes to the SQlite connection and close the cursor
         commit_connection_close_cursor(db_connection, db_cursor)

@@ -25,7 +25,7 @@ class StartupWindow(QWidget):
         update_data_button.clicked.connect(self.update_button)
 
     def update_button(self):
-        DatabaseFunctions.update_database()
+        DatabaseFunctions.update_entries_database()
         reply = QMessageBox.information(
             self,
             'INFO',
@@ -37,7 +37,6 @@ class StartupWindow(QWidget):
 
 
 class EntryListWindow(QWidget):
-
     def __init__(self, gui_manager):
         super().__init__()
         self.data = DatabaseFunctions.retrieve_entry_data_from_database()
@@ -104,10 +103,9 @@ class EntryListWindow(QWidget):
 
 
 class EntryDataWindow(QWidget):
-
-    def __init__(self, entry_data:dict, parent:QWidget):
+    def __init__(self, entry_data:dict, entry_list_window:QWidget):
         super().__init__()
-        self.parent = parent
+        self.entry_list_window = entry_list_window
         self.data = entry_data
         self.setup_window()
 
@@ -115,8 +113,13 @@ class EntryDataWindow(QWidget):
         self.setWindowTitle(f"{self.data['organization_name']}")
         self.setGeometry(450, 50, 500, 750)  # put the new window next to the original one wider than it is tall
 
+        # Claimed by
         label = QLabel(self)
-        label.setText("Prefix: ")
+        label.setText(f"Claimed by: {self.data['claimed_by']}")
+        label.move(50, 25)
+
+        label = QLabel("Prefix: ", self)
+
         label.move(50, 50)
         prefix_display = QComboBox(self)
         prefix_display.addItems([" ", "Dr.", "Mrs.","Ms.","Mr."])
@@ -317,10 +320,12 @@ class EntryDataWindow(QWidget):
 
 
 class ClaimEntryLoginWindow(QWidget):
-    def __init__(self, parent:QWidget, selected_data:dict):
+    def __init__(self, entry_list_window:QWidget, selected_data:dict):
         super().__init__()
+        self.signup_window = None
         self.email_display = None
-        self.parent = parent
+        self.selected_data = selected_data
+        self.entry_list_window = entry_list_window
         self.setup_window()
         self.show()
 
@@ -352,7 +357,89 @@ class ClaimEntryLoginWindow(QWidget):
         label.move(185, 47)
 
     def cancel_button(self):
-        EntryListWindow.close_claim_login_window(self.parent)
+        EntryListWindow.close_claim_login_window(self.entry_list_window)
 
     def submit_button(self):
-        is_claimed = DatabaseFunctions.is_entry_claimed(self.email_display.text())
+        is_entry_claimed = DatabaseFunctions.is_entry_claimed(self.email_display.text())
+        user_dict = DatabaseFunctions.lookup_teacher(self.email_display.text())
+        if not is_entry_claimed:
+            if user_dict == False:
+                self.signup_window = ClaimEntrySignUpWindow(self.entry_list_window, self.selected_data, self.email_display.text())
+                self.close()
+            else:
+                DatabaseFunctions.accept_claim(user_dict, self.selected_data)
+
+
+
+
+
+class ClaimEntrySignUpWindow(QWidget):
+    def __init__(self, entry_list_window: QWidget, selected_data: dict, bsu_email:str):
+        super().__init__()
+        self.bsu_email = bsu_email
+        self.first_name_display = None
+        self.last_name_display = None
+        self.title_display = None
+        self.department_display = None
+        self.bsu_email = bsu_email
+        self.entry_list_window = entry_list_window
+        self.selected_data = selected_data
+        self.setup_window()
+        self.show()
+
+    def setup_window(self):
+        self.setWindowTitle("Enter Your Information:")
+        self.setGeometry(200, 100, 345, 200)
+
+        label = QLabel(self)
+        label.setText(f"{self.bsu_email}@bridgew.edu")
+        label.move(50, 25)
+
+        label = QLabel(self)
+        label.setText("First Name:")
+        label.move(50, 50)
+        self.first_name_display = QLineEdit(self)
+        self.first_name_display.move(125, 50)
+
+        label = QLabel(self)
+        label.setText("Last Name:")
+        label.move(50, 75)
+        self.last_name_display = QLineEdit(self)
+        self.last_name_display.move(125, 75)
+
+        label = QLabel(self)
+        label.setText("Title:")
+        label.move(50, 100)
+        self.title_display = QLineEdit(self)
+        self.title_display.move(125, 100)
+
+        label = QLabel(self)
+        label.setText("Department:")
+        label.move(50, 125)
+        self.department_display = QLineEdit(self)
+        self.department_display.move(125, 125)
+
+        submit_data_button = QPushButton("Submit", self)
+        submit_data_button.resize(100, 25)
+        submit_data_button.move(50, 160)
+        submit_data_button.clicked.connect(self.submit_button)
+        cancel_data_button = QPushButton("Cancel", self)
+        cancel_data_button.resize(100, 25)
+        cancel_data_button.move(190, 160)
+        cancel_data_button.clicked.connect(self.cancel_button)
+
+    def cancel_button(self):
+        self.entry_list_window.list_item_claimed()
+        self.close()
+
+    def submit_button(self):
+        is_entry_claimed = DatabaseFunctions.is_entry_claimed(self.bsu_email)
+        if not is_entry_claimed:
+            teacher_data = {
+                "bsu_email" : self.bsu_email,
+                "first_name" : self.first_name_display.text,
+                "last_name" : self.last_name_display.text,
+                "title" : self.title_display.text,
+                "department" : self.department_display.text
+            }
+            DatabaseFunctions.accept_claim(teacher_data, self.selected_data)
