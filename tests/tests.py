@@ -1,15 +1,14 @@
 import json
 import sqlite3
 
-import pytestqt
 import PySide6.QtTest
 import PySide6.QtCore
 import PySide6.QtWidgets
 
 import DatabaseFunctions
 import ApiFunctions
-import GuiManager
 import GuiWindows
+
 import mock
 
 

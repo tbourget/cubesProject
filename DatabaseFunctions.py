@@ -25,8 +25,8 @@ def initialize_connection() -> sqlite3.Connection:
 
 def initialize_entries_table(db_cursor: sqlite3.Cursor):
     """
-    Creates the 'entries' table in the database 'cube_project.db' if it does not exist yet. Initializes column names
-    and data types.
+    Creates the 'entries' and 'teachers' tables in the database 'cube_project.db' if it does not exist yet. Initializes
+    column names and data types.
 
     Parameters
     ----------
@@ -34,6 +34,14 @@ def initialize_entries_table(db_cursor: sqlite3.Cursor):
         The cursor for the active connection to the 'cubes_project' database
     """
     try:
+        db_cursor.execute('''CREATE TABLE IF NOT EXISTS teachers(
+                                        bsu_email INT PRIMARY KEY,
+                                        first_name TEXT,
+                                        last_name TEXT,
+                                        title TEXT,
+                                        department TEXT
+                                        );''')
+
         db_cursor.execute('''CREATE TABLE IF NOT EXISTS entries(
                                         entry_id INT PRIMARY KEY,
                                         prefix TEXT,
@@ -60,8 +68,11 @@ def initialize_entries_table(db_cursor: sqlite3.Cursor):
                                         date_created TEXT,
                                         created_by TEXT,
                                         date_updated TEXT,
-                                        updated_by TEXT
+                                        updated_by TEXT,
+                                        claimed_by TEXT,
+                                        FOREIGN KEY(claimed_by) REFERENCES teachers(bsu_email)
                                         );''')
+
     except sqlite3.Error as db_error:
         print(f'A Database Error has occurred: {db_error}')
 

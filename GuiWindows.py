@@ -6,9 +6,9 @@ from PySide6.QtGui import QCloseEvent
 
 
 class StartupWindow(QWidget):
-    def __init__(self, GuiManager):
+    def __init__(self, gui_manager):
         super().__init__()
-        self.gm = GuiManager
+        self.gm = gui_manager
         self.setup_window()
         self.show()
 
@@ -16,11 +16,11 @@ class StartupWindow(QWidget):
         self.setWindowTitle("CUBES Project Database Viewer")
         self.setGeometry(200, 100, 345, 75)
         view_data_button = QPushButton("View Data", self)
-        view_data_button.resize(view_data_button.sizeHint())
+        view_data_button.resize(100, 25)
         view_data_button.move(60, 25)
         view_data_button.clicked.connect(self.view_button)
         update_data_button = QPushButton("Update Data", self)
-        update_data_button.resize(update_data_button.sizeHint())
+        update_data_button.resize(100, 25)
         update_data_button.move(200, 25)
         update_data_button.clicked.connect(self.update_button)
 
@@ -35,13 +35,16 @@ class StartupWindow(QWidget):
     def view_button(self):
         self.gm.launch_database_view()
 
+
 class EntryListWindow(QWidget):
 
-    def __init__(self, GuiManager):
+    def __init__(self, gui_manager):
         super().__init__()
         self.data = DatabaseFunctions.retrieve_entry_data_from_database()
+        self.gm = gui_manager
         self.list_control = None
         self.data_window = None
+        self.claim_login_window = None
         self.setup_window()
 
     def setup_window(self):
@@ -56,6 +59,10 @@ class EntryListWindow(QWidget):
         quit_button.clicked.connect(QApplication.instance().quit)
         quit_button.resize(quit_button.sizeHint())
         quit_button.move(50, 713)
+        claim_button = QPushButton("Claim Submission", self)
+        claim_button.clicked.connect(self.list_item_claimed)
+        claim_button.resize(115, 25)
+        claim_button.move(150, 713)
         self.show()
 
     def populate_display_list(self, data: list[dict]):
@@ -72,8 +79,14 @@ class EntryListWindow(QWidget):
         selected_data = current.data(0)  # the data function has a 'role' choose 0 unless you extended QListWidgetItem
         entry_id = selected_data.split("\t")[0]  # split on tab and take the first resulting entry
         full_record = self.find_full_data_record(entry_id)
-        self.data_window = EntryDataWindow(full_record)
+        self.data_window = EntryDataWindow(full_record, self)
         self.data_window.show()
+
+    def list_item_claimed(self):
+        self.claim_login_window = ClaimEntryLoginWindow(self)
+
+    def close_claim_login_window(self):
+        self.claim_login_window = None
 
     def closeEvent(self, event: QCloseEvent):
         reply = QMessageBox.question(
@@ -88,10 +101,12 @@ class EntryListWindow(QWidget):
         else:
             event.ignore()
 
+
 class EntryDataWindow(QWidget):
 
-    def __init__(self, entry_data:dict):
+    def __init__(self, entry_data:dict, parent:QWidget):
         super().__init__()
+        self.parent = parent
         self.data = entry_data
         self.setup_window()
 
@@ -168,7 +183,7 @@ class EntryDataWindow(QWidget):
         organization_website_display.move(200, 230)
         organization_website_display.setReadOnly(True)
 
-        #Organization Phone Number
+        # Organization Phone Number
         label = QLabel("Phone Number: ", self)
         label.move(50, 260)
 
@@ -300,4 +315,39 @@ class EntryDataWindow(QWidget):
         permission_to_use_name_display.move(50, 700)
 
 
+class ClaimEntryLoginWindow(QWidget):
+    def __init__(self, parent:QWidget):
+        super().__init__()
+        self.parent = parent
+        self.setup_window()
+        self.show()
 
+    def setup_window(self):
+        self.setWindowTitle("Login")
+        self.setGeometry(200, 100, 345, 125)
+
+        label = QLabel(self)
+        label.setText("Enter your BSU email:")
+        label.move(50, 25)
+
+        submit_data_button = QPushButton("Submit", self)
+        submit_data_button.resize(100, 25)
+        submit_data_button.move(50, 75)
+        submit_data_button.clicked.connect(self.cancel_button)
+        cancel_data_button = QPushButton("Cancel", self)
+        cancel_data_button.resize(100, 25)
+        cancel_data_button.move(190, 75)
+        cancel_data_button.clicked.connect(self.cancel_button)
+
+        email_display = QLineEdit("j1appleseed", self)
+        email_display.move(50, 45)
+
+        label = QLabel(self)
+        label.setText("Enter your BSU email:")
+        label.move(50, 25)
+
+        label = QLabel("@bridgew.edu", self)
+        label.move(185, 47)
+
+    def cancel_button(self):
+        EntryListWindow.close_claim_login_window(self.parent)
