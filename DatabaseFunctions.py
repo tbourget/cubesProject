@@ -3,6 +3,7 @@ import ApiFunctions
 
 # DATABASE FUNCTIONS
 
+
 def initialize_connection() -> sqlite3.Connection:
     """
     Connects to local SQLite CUBES entries database 'cubes_project.db', creates the database if it doesn't exist yet.
@@ -23,7 +24,7 @@ def initialize_connection() -> sqlite3.Connection:
         print(f'A Database Error has occurred: {db_error}')
 
 
-def initialize_entries_table(db_cursor: sqlite3.Cursor):
+def initialize_tables(db_cursor: sqlite3.Cursor):
     """
     Creates the 'entries' and 'teachers' tables in the database 'cube_project.db' if it does not exist yet. Initializes
     column names and data types.
@@ -140,6 +141,25 @@ def retrieve_entry_data_from_database() -> list[dict]:
     return final_data
 
 
+def is_entry_claimed(user:str):
+    with initialize_connection() as db_connection:
+
+        db_connection.row_factory = sqlite3.Row
+
+        # Create cursor for the database
+        db_cursor = db_connection.cursor()
+        try:
+            db_cursor.execute("SELECT * FROM entries WHERE claimed_by='{user}'")
+            raw_data = db_cursor.fetchall()
+            if raw_data == []:
+                return False
+            else:
+                return True
+
+        except sqlite3.Error as db_error:
+            print(f'A Database Error has occurred: {db_error}')
+
+
 def dict_from_row(row):
     return dict(zip(row.keys(), row))
 
@@ -152,7 +172,7 @@ def update_database():
         db_cursor = db_connection.cursor()
 
         # Initialize the 'entries' table in our database
-        initialize_entries_table(db_cursor)
+        initialize_tables(db_cursor)
 
         # Retrieve the entries as a dictionary from our Wufoo.com form using Wufoo API
         entries_dict = ApiFunctions.get_entries_as_dict()

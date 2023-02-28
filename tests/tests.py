@@ -36,7 +36,7 @@ def test_entry_table_data_population():
     # Create a temporary database with a test entry
     with DatabaseFunctions.initialize_connection() as db_connection:
         db_cursor = db_connection.cursor()
-        DatabaseFunctions.initialize_entries_table(db_cursor)
+        DatabaseFunctions.initialize_tables(db_cursor)
         test_entry = \
             """{
                 "Entries": [
@@ -99,7 +99,7 @@ def test_entry_data_window_data_population(qtbot):
     # Create a temporary database with a test entry
     with DatabaseFunctions.initialize_connection() as db_connection:
         db_cursor = db_connection.cursor()
-        DatabaseFunctions.initialize_entries_table(db_cursor)
+        DatabaseFunctions.initialize_tables(db_cursor)
         test_entry = \
             """{
                 "Entries": [
