@@ -145,7 +145,7 @@ def test_entry_data_window_data_population(qtbot):
         DatabaseFunctions.commit_connection_close_cursor(db_connection, db_cursor)
 
     with mock.patch.object(PySide6.QtWidgets.QApplication, "exit"):
-        data = GuiManager.retrieve_entry_data_from_database()
+        data = DatabaseFunctions.retrieve_entry_data_from_database()
         for entry_record in data:
             data = entry_record
 

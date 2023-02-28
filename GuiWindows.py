@@ -4,8 +4,6 @@ from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox, Q
     QLineEdit, QCheckBox, QComboBox
 from PySide6.QtGui import QCloseEvent
 
-import GuiManager
-
 
 class StartupWindow(QWidget):
     def __init__(self, GuiManager):
