@@ -108,10 +108,11 @@ def parse_json_into_entries_table(entries_json, db_cursor: sqlite3.Connection):
     for entry in entries_json['Entries']:
 
         entry_tuple = list(entry.values())
+        entry_tuple.append(None)
 
         try:
             db_cursor.execute('''INSERT OR IGNORE INTO entries VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-                            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', entry_tuple)
+                            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', entry_tuple)
         except sqlite3.Error as db_error:
             print(f'A Database Error has occurred: {db_error}')
 

@@ -148,7 +148,8 @@ def test_entry_data_window_data_population(qtbot):
         for entry_record in data:
             data = entry_record
 
-        test_window = GuiWindows.EntryDataWindow(data)
+        parent_window = GuiWindows.EntryListWindow
+        test_window = GuiWindows.EntryDataWindow(data, parent_window)
 
         widget = test_window.findChildren(PySide6.QtWidgets.QLineEdit, "email_display")
         print(widget)
