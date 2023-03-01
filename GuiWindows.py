@@ -76,7 +76,6 @@ class EntryListWindow(QWidget):
                 return entry_record
 
     def list_item_selected(self, current: QListWidgetItem, previous: QListWidgetItem):
-
         entry_id = current.data(0).split("\t")[0]
         self.selected_data = self.find_full_data_record(entry_id)
         self.data_window = EntryDataWindow(self.selected_data, self)
@@ -360,17 +359,22 @@ class ClaimEntryLoginWindow(QWidget):
         EntryListWindow.close_claim_login_window(self.entry_list_window)
 
     def submit_button(self):
-        is_entry_claimed = DatabaseFunctions.is_entry_claimed(self.email_display.text())
+        entry_claimed = DatabaseFunctions.is_entry_claimed(self.email_display.text())
         user_dict = DatabaseFunctions.lookup_teacher(self.email_display.text())
-        if not is_entry_claimed:
+        if not entry_claimed:
+            # If the username isn't already stored, sign user up
             if user_dict == False:
                 self.signup_window = ClaimEntrySignUpWindow(self.entry_list_window, self.selected_data, self.email_display.text())
                 self.close()
+            # If the username is already stored
             else:
                 DatabaseFunctions.accept_claim(user_dict, self.selected_data)
-
-
-
+                reply = QMessageBox.information(
+                    self,
+                    'INFO',
+                    'User info retrieved from email\nProject successfully claimed',
+                    QMessageBox.Ok)
+                self.close()
 
 
 class ClaimEntrySignUpWindow(QWidget):
@@ -423,6 +427,7 @@ class ClaimEntrySignUpWindow(QWidget):
         submit_data_button.resize(100, 25)
         submit_data_button.move(50, 160)
         submit_data_button.clicked.connect(self.submit_button)
+
         cancel_data_button = QPushButton("Cancel", self)
         cancel_data_button.resize(100, 25)
         cancel_data_button.move(190, 160)
@@ -437,9 +442,20 @@ class ClaimEntrySignUpWindow(QWidget):
         if not is_entry_claimed:
             teacher_data = {
                 "bsu_email" : self.bsu_email,
-                "first_name" : self.first_name_display.text,
-                "last_name" : self.last_name_display.text,
-                "title" : self.title_display.text,
-                "department" : self.department_display.text
+                "first_name" : self.first_name_display.text(),
+                "last_name" : self.last_name_display.text(),
+                "title" : self.title_display.text(),
+                "department" : self.department_display.text()
             }
+            DatabaseFunctions.add_teacher_row(teacher_data)
+            reply = QMessageBox.information(
+                self,
+                'INFO',
+                'User info logged',
+                QMessageBox.Ok)
             DatabaseFunctions.accept_claim(teacher_data, self.selected_data)
+            reply = QMessageBox.information(
+                self,
+                'INFO',
+                'Project successfully claimed',
+                QMessageBox.Ok)

@@ -36,7 +36,7 @@ def initialize_tables(db_cursor: sqlite3.Cursor):
     """
     try:
         db_cursor.execute('''CREATE TABLE IF NOT EXISTS teachers(
-                                        bsu_email INT PRIMARY KEY,
+                                        bsu_email TEXT PRIMARY KEY,
                                         first_name TEXT,
                                         last_name TEXT,
                                         title TEXT,
@@ -200,14 +200,16 @@ def accept_claim(teacher_data:dict, selected_data:dict):
 
         commit_connection_close_cursor(db_connection, db_cursor)
 
-def add_teacher_row(teacher_data):
+
+def add_teacher_row(teacher_data:dict):
     with initialize_connection() as db_connection:
 
         # Create cursor for the database
         db_cursor = db_connection.cursor()
-
+        entry_tuple = list(teacher_data.values())
+        print(entry_tuple)
         try:
-            db_cursor.execute('''INSERT OR IGNORE INTO teachers VALUES(?, ?, ?, ?, ?)''', teacher_data)
+            db_cursor.execute('''INSERT INTO teachers VALUES(?, ?, ?, ?, ?)''', entry_tuple)
 
         except sqlite3.Error as db_error:
             print(f'A Database Error has occurred: {db_error}')
