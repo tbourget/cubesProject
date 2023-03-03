@@ -44,6 +44,7 @@ class EntryListWindow(QWidget):
         self.gm = gui_manager
         self.list_control = None
         self.data_window = None
+        self.current_list_item = None
         self.claim_login_window = None
         self.setup_window()
 
@@ -86,6 +87,13 @@ class EntryListWindow(QWidget):
 
     def close_claim_login_window(self):
         self.claim_login_window = None
+
+    def update_data(self):
+        self.data = DatabaseFunctions.retrieve_entry_data_from_database()
+        entry_id = self.list_control.currentItem().data(0).split("\t")[0]
+        self.selected_data = self.find_full_data_record(entry_id)
+        self.data_window = EntryDataWindow(self.selected_data, self)
+        self.data_window.show()
 
     def closeEvent(self, event: QCloseEvent):
         reply = QMessageBox.question(
@@ -359,8 +367,9 @@ class ClaimEntryLoginWindow(QWidget):
         EntryListWindow.close_claim_login_window(self.entry_list_window)
 
     def submit_button(self):
-        entry_claimed = DatabaseFunctions.is_entry_claimed(self.email_display.text())
+        entry_claimed = DatabaseFunctions.is_entry_claimed(self.email_display.text(), self.selected_data['entry_id'])
         user_dict = DatabaseFunctions.lookup_teacher(self.email_display.text())
+
         if not entry_claimed:
             # If the username isn't already stored, sign user up
             if user_dict == False:
@@ -374,7 +383,16 @@ class ClaimEntryLoginWindow(QWidget):
                     'INFO',
                     'User info retrieved from email\nProject successfully claimed',
                     QMessageBox.Ok)
+                self.entry_list_window.update_data()
                 self.close()
+        else:
+            teacher_claimed_by = self.selected_data['claimed_by']
+            reply = QMessageBox.information(
+                self,
+                'INFO',
+                f'This entry is already claimed by {teacher_claimed_by}',
+                QMessageBox.Ok)
+            self.close()
 
 
 class ClaimEntrySignUpWindow(QWidget):
@@ -438,7 +456,7 @@ class ClaimEntrySignUpWindow(QWidget):
         self.close()
 
     def submit_button(self):
-        is_entry_claimed = DatabaseFunctions.is_entry_claimed(self.bsu_email)
+        is_entry_claimed = DatabaseFunctions.is_entry_claimed(self.bsu_email, self.selected_data['entry_id'])
         if not is_entry_claimed:
             teacher_data = {
                 "bsu_email" : self.bsu_email,
@@ -459,3 +477,5 @@ class ClaimEntrySignUpWindow(QWidget):
                 'INFO',
                 'Project successfully claimed',
                 QMessageBox.Ok)
+            self.entry_list_window.update_data()
+            self.entry_list_window.close_claim_login_window()

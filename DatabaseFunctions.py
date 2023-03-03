@@ -154,7 +154,11 @@ def lookup_teacher(bsu_email:str):
             if raw_data == []:
                 return False
             else:
-                return dict_from_row(raw_data)
+                record = []
+                for row in raw_data:
+                    record = dict_from_row(row)
+
+                return record
 
         except sqlite3.Error as db_error:
             print(f'A Database Error has occurred: {db_error}')
@@ -162,15 +166,23 @@ def lookup_teacher(bsu_email:str):
         commit_connection_close_cursor(db_connection, db_cursor)
 
 
-def is_entry_claimed(bsu_email:str):
+def is_entry_claimed(bsu_email:str, entry_id):
     with initialize_connection() as db_connection:
+
+        db_connection.row_factory = sqlite3.Row
 
         # Create cursor for the database
         db_cursor = db_connection.cursor()
         try:
-            db_cursor.execute("SELECT * FROM entries WHERE claimed_by=?", (bsu_email,))
+            db_cursor.execute("SELECT * FROM entries WHERE entry_id=?;", (entry_id,))
             raw_data = db_cursor.fetchall()
-            if raw_data == []:
+            print(f'email: {bsu_email} entry_id: {entry_id}')
+
+            record = []
+            for row in raw_data:
+                record = dict_from_row(row)
+
+            if record['claimed_by'] is None:
                 return False
             else:
                 return True
@@ -183,7 +195,6 @@ def is_entry_claimed(bsu_email:str):
 
 def accept_claim(teacher_data:dict, selected_data:dict):
     with initialize_connection() as db_connection:
-        print(teacher_data.keys())
         # Create cursor for the database
         db_cursor = db_connection.cursor()
         try:
@@ -207,7 +218,7 @@ def add_teacher_row(teacher_data:dict):
         # Create cursor for the database
         db_cursor = db_connection.cursor()
         entry_tuple = list(teacher_data.values())
-        print(entry_tuple)
+        print(f'hi {entry_tuple}')
         try:
             db_cursor.execute('''INSERT INTO teachers VALUES(?, ?, ?, ?, ?)''', entry_tuple)
 
