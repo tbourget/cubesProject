@@ -218,7 +218,7 @@ def add_teacher_row(teacher_data:dict):
         # Create cursor for the database
         db_cursor = db_connection.cursor()
         entry_tuple = list(teacher_data.values())
-        print(f'hi {entry_tuple}')
+
         try:
             db_cursor.execute('''INSERT INTO teachers VALUES(?, ?, ?, ?, ?)''', entry_tuple)
 

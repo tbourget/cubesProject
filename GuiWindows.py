@@ -40,8 +40,8 @@ class EntryListWindow(QWidget):
     def __init__(self, gui_manager):
         super().__init__()
         self.data = DatabaseFunctions.retrieve_entry_data_from_database()
-        self.selected_data = None
         self.gm = gui_manager
+        self.selected_data = None
         self.list_control = None
         self.data_window = None
         self.current_list_item = None
@@ -66,19 +66,21 @@ class EntryListWindow(QWidget):
         claim_button.move(150, 713)
         self.show()
 
+    def sort_display_by_date(self):
+
     def populate_display_list(self, data: list[dict]):
         for entries in data:
-            display_text = f"{entries['entry_id']}\t{entries['organization_name']}"
+            display_text = f"{entries['date_created']}\t{entries['organization_name']}"
             list_item = QListWidgetItem(display_text, listview=self.list_control)
 
-    def find_full_data_record(self, entry_id):
+    def find_full_data_record(self, list_index):
         for entry_record in self.data:
             if entry_record['entry_id'] == int(entry_id):
                 return entry_record
 
     def list_item_selected(self, current: QListWidgetItem, previous: QListWidgetItem):
-        entry_id = current.data(0).split("\t")[0]
-        self.selected_data = self.find_full_data_record(entry_id)
+        list_index = current.listWidget().currentRow()
+        self.selected_data = self.find_full_data_record(list_index)
         self.data_window = EntryDataWindow(self.selected_data, self)
         self.data_window.show()
 
